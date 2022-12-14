@@ -9,6 +9,40 @@ resource "hcloud_firewall" "k8s_firewall" {
     ]
   }
 
+  # Pihole, Nginx
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "80"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  # Pihole DNS
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "53"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  # Pihole DNS
+  rule {
+    direction = "in"
+    protocol  = "udp"
+    port      = "53"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  # ssh
   rule {
     direction = "in"
     protocol  = "tcp"
@@ -19,6 +53,7 @@ resource "hcloud_firewall" "k8s_firewall" {
     ]
   }
 
+  # Ingress Nginx
   rule {
     direction = "in"
     protocol  = "tcp"
@@ -29,6 +64,7 @@ resource "hcloud_firewall" "k8s_firewall" {
     ]
   }
 
+  # Kubernetes control plane
   rule {
     direction = "in"
     protocol  = "tcp"
