@@ -26,8 +26,7 @@ resource "hcloud_firewall" "k8s_firewall" {
     protocol  = "tcp"
     port      = "53"
     source_ips = [
-      "0.0.0.0/0",
-      "::/0"
+      "193.176.87.136/32", # VPN IP
     ]
   }
 
@@ -37,8 +36,7 @@ resource "hcloud_firewall" "k8s_firewall" {
     protocol  = "udp"
     port      = "53"
     source_ips = [
-      "0.0.0.0/0",
-      "::/0"
+      "193.176.87.136/32", # VPN IP
     ]
   }
 
