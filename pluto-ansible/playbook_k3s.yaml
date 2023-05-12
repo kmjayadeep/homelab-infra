@@ -1,0 +1,4 @@
+- hosts: k3s
+  become: yes
+  roles:
+    - role: roles/k3s
