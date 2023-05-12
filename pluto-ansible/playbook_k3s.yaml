@@ -2,3 +2,4 @@
   become: yes
   roles:
     - role: roles/k3s
+    - role: roles/cilium
