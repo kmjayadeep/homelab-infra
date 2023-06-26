@@ -38,10 +38,12 @@
     disk: 100
     memory: 12288
     swap: 0
-    state: "present"
     tags: "k8s"
     pubkey: "{{ ssh_public_key }}"
     netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.20/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::ed0/64,gw6=2a02:8109:8400:60f4::1"}'
+    unprivileged: false
+    onboot: true
+    state: "present"
 
 - name: Start LXC container
   community.general.proxmox:

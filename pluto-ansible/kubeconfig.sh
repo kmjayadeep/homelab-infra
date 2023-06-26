@@ -2,7 +2,7 @@
 
 # kubeconfig.sh: copy kubeconfig
 
-scp pluto:/etc/rancher/k3s/k3s.yaml /tmp
+scp cosmos:/etc/rancher/k3s/k3s.yaml /tmp
 
 # Remove existing config
 kubectl config delete-cluster cosmos
