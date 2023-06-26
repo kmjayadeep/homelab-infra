@@ -1,0 +1,56 @@
+- name: Install helm if not exists
+  unarchive:
+    src: https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
+    dest: /usr/local/bin
+    extra_opts: "--strip-components=1"
+    owner: root
+    group: root
+    mode: 0755
+    remote_src: true
+  args:
+    creates: /usr/local/bin/helm
+
+- name: Add stable chart repo
+  kubernetes.core.helm_repository:
+    name: cilium
+    repo_url: "https://helm.cilium.io/"
+
+- name: Deploy Cilium
+  kubernetes.core.helm:
+    name: cilium
+    chart_ref: cilium/cilium
+    chart_version: 1.13.2
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    release_namespace: kube-system
+    wait: True
+    values:
+      ipv6:
+        enabled: true
+      cluster:
+        name: "{{ cluster_name }}"
+      operator:
+        replicas: 1
+
+      kubeProxyReplacement: strict
+
+      ipam:
+        mode: kubernetes
+        operator:
+          clusterPoolIPv6PodCIDRList:
+          - 2a02:8109:8400:60f4:800::/96
+          clusterPoolIPv4PodCIDRList:
+          - 10.63.0.0/16
+          clusterPoolIPv6MaskSize: "{{ node_cidr_mask_size_ipv6 }}"
+
+      bpf:
+        masquerade: true
+
+      enableIPv6Masquerade: false
+      extraArgs:
+      - --enable-ipv6-ndp
+      - --ipv6-mcast-device={{ net_interface }}
+
+      k8sServiceHost: "{{ master_ip }}"
+      k8sServicePort: "{{ master_port }}"
+
+

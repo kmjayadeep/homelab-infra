@@ -1,6 +1,7 @@
+- hosts: prox
+  roles:
+    - role: roles/proxmox
+
 - hosts: k3s
-  become: yes
   roles:
     - role: roles/k3s
-    - role: roles/cilium
-    - role: roles/k8s-setup

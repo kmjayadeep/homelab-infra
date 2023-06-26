@@ -1,0 +1,53 @@
+- name: Disable enterprise packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Disable ceph packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/ceph.list
+    state: absent
+
+- name: install proxmoxer
+  apt: name=python3-proxmoxer state=present update_cache=yes
+
+
+# Run `pveam available to list available templates`
+- name: Check if template file exists
+  stat:
+    path: /var/lib/vz/template/cache/debian-12-standard_12.0-1_amd64.tar.zst
+  register: template_file
+
+- name: Download template if not present
+  shell: pveam download local debian-12-standard_12.0-1_amd64.tar.zst
+  when: not template_file.stat.exists
+
+
+- name: Create LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    ostemplate: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"  # Template name or path
+    hostname: cosmos
+    password: "{{ cosmos_password }}"
+    storage: "local-lvm"
+    cpus: 4
+    disk: 100
+    memory: 12288
+    swap: 0
+    state: "present"
+    tags: "k8s"
+    pubkey: "{{ ssh_public_key }}"
+    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.20/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::ed0/64,gw6=2a02:8109:8400:60f4::1"}'
+
+- name: Start LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    state: "started"

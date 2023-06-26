@@ -1,0 +1,38 @@
+---
+
+- name: Download k3s binary x64
+  get_url:
+    url: https://get.k3s.io
+    checksum: sha256:1fa0365382d25b67b67c4891af418ad4dfa8bfc27a817d188054c88f8d910e9d
+    dest: /tmp/k3s_install.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install k3s
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    INSTALL_K3S_EXEC: 'server --disable traefik --disable servicelb --disable metrics-server --disable-cloud-controller
+       --disable-kube-proxy --kube-controller-manager-arg=--node-cidr-mask-size-ipv6={{ node_cidr_mask_size_ipv6 }}
+       --cluster-cidr={{ cluster_cidr }} --service-cidr={{ service_cidr}}
+       --disable-network-policy --flannel-backend=none --node-ip={{ node_ip}} --disable local-storage'
+  command: /tmp/k3s_install.sh
+
+- name: Replace kubeconfig vars
+  replace:
+    path: /etc/rancher/k3s/k3s.yaml
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+  - regexp: 'https://127.0.0.1:6443'
+    replace: 'https://{{ master_ip}}:6443'
+  - regexp: "default"
+    replace: "{{ cluster_name }}"
+
+- name: Set kubeconfig permissions
+  file:
+    path: /etc/rancher/k3s/k3s.yaml
+    state: file
+    owner: pluto
+    group: pluto
+    mode: 0600
