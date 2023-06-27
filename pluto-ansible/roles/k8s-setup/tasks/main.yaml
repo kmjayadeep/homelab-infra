@@ -31,9 +31,10 @@
         tls.crt: "{{ kubeseal_crt }}"
         tls.key: "{{ kubeseal_key }}"
       kind: Secret
-      type: kubernetes.io/tls
-      labels:
-        sealedsecrets.bitnami.com/sealed-secrets-key: active
       metadata:
-        name: sealed-secrets-key
+        generateName: sealed-secrets-key
+        labels:
+          sealedsecrets.bitnami.com/sealed-secrets-key: active
+        name: sealed-secrets-key6fsbs
         namespace: flux-system
+      type: kubernetes.io/tls
