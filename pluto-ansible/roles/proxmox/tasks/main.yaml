@@ -22,7 +22,6 @@
   shell: pveam download local debian-12-standard_12.0-1_amd64.tar.zst
   when: not template_file.stat.exists
 
-
 - name: Create LXC container
   community.general.proxmox:
     vmid: 100

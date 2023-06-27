@@ -1,7 +1,26 @@
 ---
+- name: Copy kmsg script
+  copy:
+    dest: /usr/local/bin/conf-kmsg.sh
+    group: root
+    mode: 0744
+    owner: root
+    src: files/conf-kmsg.sh
 
-- name: Setup mounts
-  shell: echo 'L /dev/kmsg - - - - /dev/console' > /etc/tmpfiles.d/kmsg.conf
+- name: Copy kmsg service
+  copy:
+    dest: /etc/systemd/system/conf-kmsg.service
+    group: root
+    mode: 0644
+    owner: root
+    src: files/conf-kmsg.service
+
+
+- name: Enable kmsg service
+  shell: |
+    chmod +x /usr/local/bin/conf-kmsg.sh
+    systemctl daemon-reload
+    systemctl enable --now conf-kmsg
 
 - name: Download k3s binary x64
   get_url:
