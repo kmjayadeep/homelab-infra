@@ -50,3 +50,18 @@
     replace: 'https://{{ master_ip}}:6443'
   - regexp: "default"
     replace: "{{ cluster_name }}"
+
+- name: Create media directory
+  file:
+    path: /mnt/media/movies
+    state: directory
+
+- name: Create shows directory
+  file:
+    path: /mnt/media/shows
+    state: directory
+
+- name: Create downloads directory
+  file:
+    path: /mnt/downloads
+    state: directory
