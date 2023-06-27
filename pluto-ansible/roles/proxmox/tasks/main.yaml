@@ -45,6 +45,18 @@
     onboot: true
     state: "present"
 
+- name: Edit LXC attributes
+  ansible.builtin.blockinfile:
+    path: /etc/pve/lxc/100.conf
+    block: |
+      lxc.apparmor.profile: unconfined
+      lxc.cgroup.devices.allow: a
+      lxc.cap.drop:
+      lxc.mount.auto: "proc:rw sys:rw"
+
+- name: Push kernel boot configs
+  shell: pct push 100 /boot/config-$(uname -r) /boot/config-$(uname -r)
+
 - name: Start LXC container
   community.general.proxmox:
     vmid: 100
