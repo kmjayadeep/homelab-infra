@@ -48,7 +48,6 @@
       enableIPv6Masquerade: false
       extraArgs:
       - --enable-ipv6-ndp
-      - --ipv6-mcast-device={{ net_interface }}
 
       k8sServiceHost: "{{ master_ip }}"
       k8sServicePort: "{{ master_port }}"
