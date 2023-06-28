@@ -51,17 +51,12 @@
   - regexp: "default"
     replace: "{{ cluster_name }}"
 
-- name: Create media directory
+- name: Create storage directories
   file:
-    path: /mnt/media/movies
+    path: "{{ item }}"
     state: directory
-
-- name: Create shows directory
-  file:
-    path: /mnt/media/shows
-    state: directory
-
-- name: Create downloads directory
-  file:
-    path: /mnt/downloads
-    state: directory
+  loop:
+    - /mnt/media/movies
+    - /mnt/media/shows
+    - /mnt/downloads/incomplete
+    - /mnt/downloads/completed
