@@ -2,6 +2,10 @@
   roles:
     - role: roles/proxmox
 
+- hosts: pihole
+  roles:
+    - role: roles/pihole
+
 - hosts: k3s
   roles:
     - role: roles/k3s
