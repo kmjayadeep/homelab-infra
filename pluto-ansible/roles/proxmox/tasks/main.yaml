@@ -8,21 +8,48 @@
     path: /etc/apt/sources.list.d/ceph.list
     state: absent
 
+- name: Enable iptable_mangle module
+  community.general.modprobe:
+    name: iptable_mangle
+    state: present
+    persistent: present
+
+- name: Enable ip6table_mangle
+  community.general.modprobe:
+    name: ip6table_mangle
+    state: present
+    persistent: present
+
+- name: Enable cronjob for dead mans snitch
+  ansible.builtin.cron:
+    name: "deadmansnitch"
+    minute: "*"
+    hour: "*"
+    job: "curl https://nosnch.in/b3b09c87ea"
+
 - name: install proxmoxer
   apt: name=python3-proxmoxer state=present update_cache=yes
 
-
 # Run `pveam available to list available templates`
-- name: Check if template file exists
+- name: Check if debian template file exists
   stat:
     path: /var/lib/vz/template/cache/debian-12-standard_12.0-1_amd64.tar.zst
-  register: template_file
+  register: debian_template_file
 
-- name: Download template if not present
+- name: Download debian template if not present
   shell: pveam download local debian-12-standard_12.0-1_amd64.tar.zst
-  when: not template_file.stat.exists
+  when: not debian_template_file.stat.exists
 
-- name: Create LXC container
+- name: Check if alpine template file exists
+  stat:
+    path: /var/lib/vz/template/cache/alpine-3.18-default_20230607_amd64.tar.xz
+  register: alpine_template_file
+
+- name: Download alpine template if not present
+  shell: pveam download local alpine-3.18-default_20230607_amd64.tar.xz
+  when: not alpine_template_file.stat.exists
+
+- name: Create Cosmos LXC container
   community.general.proxmox:
     vmid: 100
     node: pluto
@@ -44,7 +71,7 @@
     onboot: true
     state: "present"
 
-- name: Edit LXC attributes
+- name: Edit cosmos LXC attributes
   ansible.builtin.blockinfile:
     path: /etc/pve/lxc/100.conf
     block: |
@@ -56,7 +83,7 @@
 # - name: Push kernel boot configs
 #   shell: pct push 100 /boot/config-$(uname -r) /boot/config-$(uname -r)
 
-- name: Start LXC container
+- name: Start cosmos LXC container
   community.general.proxmox:
     vmid: 100
     node: pluto
@@ -65,21 +92,33 @@
     api_host: "{{ proxmox_api_host }}"
     state: "started"
 
-- name: Enable iptable_mangle module
-  community.general.modprobe:
-    name: iptable_mangle
-    state: present
-    persistent: present
+- name: Create Pihole LXC container
+  community.general.proxmox:
+    vmid: 101
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    ostemplate: "local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz"
+    hostname: pihole
+    password: "{{ pihole_password }}"
+    storage: "local-lvm"
+    cpus: 1
+    disk: 10
+    memory: 512
+    swap: 512
+    tags: "pihole"
+    pubkey: "{{ ssh_public_key }}"
+    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.100/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::100/64,gw6=2a02:8109:8400:60f4::1"}'
+    unprivileged: false
+    onboot: true
+    state: "present"
 
-- name: Enable ip6table_mangle
-  community.general.modprobe:
-    name: ip6table_mangle
-    state: present
-    persistent: present
-
-- name: Enable cronjob for dead mans snitch
-  ansible.builtin.cron:
-    name: "deadmansnitch"
-    minute: "*"
-    hour: "*"
-    job: "curl https://nosnch.in/b3b09c87ea"
+- name: Start Pihole LXC container
+  community.general.proxmox:
+    vmid: 101
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    state: "started"
