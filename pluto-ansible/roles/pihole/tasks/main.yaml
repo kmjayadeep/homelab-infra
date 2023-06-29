@@ -1,3 +1,6 @@
+- name: install sqlite3
+  apt: name=sqlite3 state=present
+
 - name: Create pihole config dir
   file:
     path: /etc/pihole
@@ -25,3 +28,13 @@
 
 - name: Set web password
   shell: pihole -a -p "{{ pihole_web_password }}"
+
+- name: Add adlists
+  shell: |
+    sqlite3 /etc/pihole/gravity.db "DELETE FROM adlist"
+    sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (address, enabled, comment) VALUES ('https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts', 1, 'comment');"
+    sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (address, enabled, comment) VALUES ('https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt', 1, 'comment');"
+    sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (address, enabled, comment) VALUES ('https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt', 1, 'comment');"
+
+- name: Upgrade gravity
+  shell: pihole -g
