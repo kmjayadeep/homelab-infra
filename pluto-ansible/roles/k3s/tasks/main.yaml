@@ -15,12 +15,17 @@
     owner: root
     src: files/conf-kmsg.service
 
-
 - name: Enable kmsg service
-  shell: |
-    chmod +x /usr/local/bin/conf-kmsg.sh
-    systemctl daemon-reload
-    systemctl enable --now conf-kmsg
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    daemon_reload: true
+    name: conf-kmsg
+
+- name: Check if k3s already installed
+  stat:
+    path: /etc/systemd/system/k3s.service
+  register: k3s_service_file
 
 - name: Download k3s binary x64
   get_url:
@@ -30,6 +35,7 @@
     owner: root
     group: root
     mode: 0755
+  when: not k3s_service_file.stat.exists
 
 - name: Install k3s
   environment:
@@ -39,6 +45,7 @@
        --cluster-cidr={{ cluster_cidr }} --service-cidr={{ service_cidr}} --snapshotter native
        --disable-network-policy --flannel-backend=none --node-ip={{ node_ip}} --disable local-storage'
   command: /tmp/k3s_install.sh
+  when: not k3s_service_file.stat.exists
 
 - name: Replace kubeconfig vars
   replace:

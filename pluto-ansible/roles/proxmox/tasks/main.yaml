@@ -83,34 +83,34 @@
     api_host: "{{ proxmox_api_host }}"
     state: "started"
 
-- name: Create Pihole LXC container
-  community.general.proxmox:
-    vmid: 101
-    node: pluto
-    api_user: root@pam
-    api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_api_host }}"
-    # ostemplate: "local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz"
-    ostemplate: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"
-    hostname: pihole
-    password: "{{ pihole_password }}"
-    storage: "local-lvm"
-    cpus: 1
-    disk: 10
-    memory: 512
-    swap: 512
-    tags: "pihole"
-    pubkey: "{{ ssh_public_key }}"
-    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.100/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::100/64,gw6=2a02:8109:8400:60f4::1"}'
-    unprivileged: true
-    onboot: true
-    state: "present"
+# - name: Create Pihole LXC container
+#   community.general.proxmox:
+#     vmid: 101
+#     node: pluto
+#     api_user: root@pam
+#     api_password: "{{ proxmox_api_password }}"
+#     api_host: "{{ proxmox_api_host }}"
+#     # ostemplate: "local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz"
+#     ostemplate: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"
+#     hostname: pihole
+#     password: "{{ pihole_password }}"
+#     storage: "local-lvm"
+#     cpus: 1
+#     disk: 10
+#     memory: 512
+#     swap: 512
+#     tags: "pihole"
+#     pubkey: "{{ ssh_public_key }}"
+#     netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.100/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::100/64,gw6=2a02:8109:8400:60f4::1"}'
+#     unprivileged: true
+#     onboot: true
+#     state: "present"
 
-- name: Start Pihole LXC container
-  community.general.proxmox:
-    vmid: 101
-    node: pluto
-    api_user: root@pam
-    api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_api_host }}"
-    state: "started"
+# - name: Start Pihole LXC container
+#   community.general.proxmox:
+#     vmid: 101
+#     node: pluto
+#     api_user: root@pam
+#     api_password: "{{ proxmox_api_password }}"
+#     api_host: "{{ proxmox_api_host }}"
+#     state: "started"
