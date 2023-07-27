@@ -83,4 +83,15 @@ resource "hcloud_firewall" "k8s_firewall" {
       "::/0"
     ]
   }
+
+  # Wireguard
+  rule {
+    direction = "in"
+    protocol  = "udp"
+    port      = "31820"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
 }
