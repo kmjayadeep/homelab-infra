@@ -25,7 +25,7 @@
     name: "deadmansnitch"
     minute: "*"
     hour: "*"
-    job: "curl https://nosnch.in/b3b09c87ea"
+    job: "curl https://hc-ping.com/f7b89baa-8073-4ef6-b3ff-cf15e3634e5b"
 
 - name: install proxmoxer
   apt: name=python3-proxmoxer state=present update_cache=yes
