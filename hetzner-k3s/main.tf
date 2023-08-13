@@ -16,7 +16,7 @@ resource "hcloud_server" "k8s1" {
   name = "uranus"
   image = "ubuntu-22.04"
   location  = "nbg1"
-  server_type = "cx21"
+  server_type = "cx31"
   ssh_keys  = ["${data.hcloud_ssh_key.ssh_key.id}"]
   public_net {
     ipv4_enabled = true
