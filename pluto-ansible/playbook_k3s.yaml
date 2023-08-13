@@ -2,6 +2,9 @@
   roles:
     - role: roles/proxmox
 
+## TODO:
+## Configure cloudflare tunnel
+
 - hosts: k3s
   roles:
     - role: roles/k3s
