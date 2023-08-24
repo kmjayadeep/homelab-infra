@@ -1,0 +1,60 @@
+- name: Disable enterprise packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Disable ceph packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/ceph.list
+    state: absent
+
+- name: Enable cronjob for dead mans snitch
+  ansible.builtin.cron:
+    name: "deadmansnitch"
+    minute: "*"
+    hour: "*"
+    job: "curl https://hc-ping.com/f3908729-f7ab-49f3-851b-5c06157a7f4c"
+
+- name: install proxmoxer
+  apt: name=python3-proxmoxer state=present update_cache=yes
+
+# Run `pveam available to list available templates`
+- name: Check if debian template file exists
+  stat:
+    path: /var/lib/vz/template/cache/debian-12-standard_12.0-1_amd64.tar.zst
+  register: debian_template_file
+
+- name: Download debian template if not present
+  shell: pveam download local debian-12-standard_12.0-1_amd64.tar.zst
+  when: not debian_template_file.stat.exists
+
+- name: Create Titanic LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: hp
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    ostemplate: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"  # Template name or path
+    hostname: titanic
+    password: "{{ titanic_password }}"
+    storage: "local-lvm"
+    cpus: 4
+    disk: 100
+    memory: 7000
+    swap: 0
+    tags: "docker"
+    pubkey: "{{ ssh_public_key }}"
+    netif: '{"net0":"name=eth0,gw=192.168.80.1,ip=192.168.80.21/24,bridge=vmbr0"}'
+    unprivileged: false
+    onboot: true
+    state: "present"
+
+- name: Start titanic LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: hp
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    state: "started"

@@ -1,0 +1,3 @@
+- hosts: prox
+  roles:
+  - role: roles/proxmox
