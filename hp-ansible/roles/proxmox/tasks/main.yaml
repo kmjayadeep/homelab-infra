@@ -18,6 +18,10 @@
 - name: install proxmoxer
   apt: name=python3-proxmoxer state=present update_cache=yes
 
+# For automatically turning off screen
+- name: install vbetool
+  apt: name=vbetool state=present update_cache=yes
+
 # Run `pveam available to list available templates`
 - name: Check if debian template file exists
   stat:
