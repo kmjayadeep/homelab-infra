@@ -1,3 +1,11 @@
+- name: Copy tailscale install script
+  copy:
+    dest: /usr/local/bin/tailscale-install.sh
+    group: root
+    mode: 0744
+    owner: root
+    src: files/tailscale-install.sh
+
 - name: Disable enterprise packages repo
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
@@ -21,6 +29,35 @@
 # For automatically turning off screen
 - name: install vbetool
   apt: name=vbetool state=present update_cache=yes
+
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: enable ipv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: enable ipv6 forwarding
+  sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Check if tailscale already installed
+  stat:
+    path: /usr/bin/tailscale
+  register: tailscale_bin
+
+- name: Install tailscale
+  command: /usr/local/bin/tailscale-install.sh
+  when: not tailscale_bin.stat.exists
+
+- name: Start tailscale
+  command: tailscale up --advertise-routes=192.168.80.0/24 --authkey="{{ tailscale_key }}"
 
 # Run `pveam available to list available templates`
 - name: Check if debian template file exists
