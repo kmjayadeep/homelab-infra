@@ -1,3 +1,31 @@
+- name: ensure docker conf directory exists
+  file:
+    path: /etc/docker
+    recurse: true
+    state: directory
+
+- name: Copy docker daemon config
+  copy:
+    dest: /etc/docker/daemon.json
+    group: root
+    mode: 0644
+    owner: root
+    src: files/daemon.json
+
+- name: ensure docker service directory exists
+  file:
+    path: /etc/systemd/system/docker.service.d/
+    recurse: true
+    state: directory
+
+- name: Copy docker service override
+  copy:
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    group: root
+    mode: 0644
+    owner: root
+    src: files/service-override.conf
+
 - name: Install required system packages
   apt:
     pkg:
