@@ -187,6 +187,10 @@
   shell: qm set 110 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-110-disk-0
   when: zeus.changed == true
 
+- name: Resize zeus disk
+  shell: qm disk resize 110 scsi0 50G
+  when: zeus.changed == true
+
 - name: Set boot order
   shell: qm set 110 --boot order=scsi0
   when: zeus.changed == true
