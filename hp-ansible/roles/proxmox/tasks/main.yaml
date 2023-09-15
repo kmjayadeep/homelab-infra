@@ -24,11 +24,11 @@
     job: "curl https://hc-ping.com/f3908729-f7ab-49f3-851b-5c06157a7f4c"
 
 - name: install proxmoxer
-  apt: name=python3-proxmoxer state=present update_cache=yes
+  apt: name=python3-proxmoxer state=present update_cache=false
 
 # For automatically turning off screen
 - name: install vbetool
-  apt: name=vbetool state=present update_cache=yes
+  apt: name=vbetool state=present update_cache=false
 
 - name: Enable cronjob for vbetool
   ansible.builtin.cron:
@@ -94,7 +94,7 @@
     tags: "docker"
     pubkey: "{{ ssh_public_key }}"
     netif: '{"net0":"name=eth0,gw=192.168.80.1,ip=192.168.80.21/24,bridge=vmbr0"}'
-    unprivileged: true
+    unprivileged: false
     onboot: true
     state: "present"
     features:
