@@ -30,6 +30,12 @@
 - name: install vbetool
   apt: name=vbetool state=present update_cache=yes
 
+- name: Enable cronjob for vbetool
+  ansible.builtin.cron:
+    name: "turn off display"
+    special_time: reboot
+    job: "setterm --blank 1"
+
 # Set ip forwarding on in /proc and in the sysctl file and reload if necessary
 - name: enable ipv4 forwarding
   sysctl:
@@ -81,9 +87,9 @@
     hostname: titanic
     password: "{{ titanic_password }}"
     storage: "local-lvm"
-    cpus: 4
+    cpus: 2
     disk: 100
-    memory: 7000
+    memory: 3000
     swap: 0
     tags: "docker"
     pubkey: "{{ ssh_public_key }}"
@@ -104,3 +110,67 @@
     api_password: "{{ proxmox_api_password }}"
     api_host: "{{ proxmox_api_host }}"
     state: "started"
+
+- name: Check if ubuntu iso file exists
+  stat:
+    path: /var/lib/vz/template/iso/ubuntu-20.04.6-desktop-amd64.iso
+  register: ubuntu_iso
+
+- name: Download ubuntu iso
+  shell: wget https://www.releases.ubuntu.com/focal/ubuntu-20.04.6-desktop-amd64.iso -O /var/lib/vz/template/iso/ubuntu-20.04.6-desktop-amd64.iso
+  when: not ubuntu_iso.stat.exists
+
+- name: Check if manjaro iso file exists
+  stat:
+    path: /var/lib/vz/template/iso/manjaro-sway-22.1.2-230910-linux61.iso
+  register: manjaro_iso
+
+- name: Download manjaro sway iso
+  shell: wget https://manjaro-sway.download/download?file=manjaro-sway-22.1.2-230910-linux61.iso -O /var/lib/vz/template/iso/manjaro-sway-22.1.2-230910-linux61.iso
+  when: not manjaro_iso.stat.exists
+
+- name: Create virgo VM
+  community.general.proxmox_kvm:
+    vmid: 102
+    node: hp
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    name: virgo
+    cpulimit: 0
+    cores: 2
+    memory: 4000
+    sata:
+      sata0: 'local-lvm:100,format=raw'
+    ide:
+      ide0: local:iso/manjaro-sway-22.1.2-230910-linux61.iso,media=cdrom,size=6734336
+    bios: ovmf
+    efidisk0:
+      storage: local-lvm
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: false
+    sshkeys: "{{ ssh_public_key }}"
+    nameservers:
+      - '1.1.1.1'
+    net:
+      net0: 'virtio,bridge=vmbr0,tag=77'
+    ipconfig:
+      ipconfig0: 'ip=192.168.80.22/24'
+    onboot: true
+    agent: true
+  register: virgo
+
+- name: Waiting to start virtual server machine completely
+  wait_for:
+    timeout: 45
+  when: virgo.changed == true
+
+- name: Start VM
+  community.general.proxmox_kvm:
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    name: virgo
+    node: hp
+    state: started
