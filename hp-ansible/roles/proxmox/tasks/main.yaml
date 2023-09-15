@@ -120,37 +120,40 @@
 #   shell: wget https://www.releases.ubuntu.com/focal/ubuntu-20.04.6-desktop-amd64.iso -O /var/lib/vz/template/iso/ubuntu-20.04.6-desktop-amd64.iso
 #   when: not ubuntu_iso.stat.exists
 
-- name: Check if manjaro iso file exists
-  stat:
-    path: /var/lib/vz/template/iso/manjaro-sway-22.1.2-230910-linux61.iso
-  register: manjaro_iso
+# - name: Check if manjaro iso file exists
+#   stat:
+#     path: /var/lib/vz/template/iso/manjaro-sway-22.1.2-230910-linux61.iso
+#   register: manjaro_iso
 
-- name: Download manjaro sway iso
-  shell: wget https://sourceforge.net/projects/manjarolinux/files/xfce/23.0.1/manjaro-xfce-23.0.1-230911-linux65.iso/download -O /var/lib/vz/template/iso/manjaro-xfce-23.0.1-230911-linux65.iso
-  when: not manjaro_iso.stat.exists
+# - name: Download manjaro sway iso
+#   shell: wget https://sourceforge.net/projects/manjarolinux/files/xfce/23.0.1/manjaro-xfce-23.0.1-230911-linux65.iso/download -O /var/lib/vz/template/iso/manjaro-xfce-23.0.1-230911-linux65.iso
+#   when: not manjaro_iso.stat.exists
 
-- name: Create virgo VM
+# - name: Check if ubuntu-server iso file exists
+#   stat:
+#     path: /var/lib/vz/template/iso/ubuntu-22.04.3-live-server-amd64.iso
+#   register: ubuntu_server_iso
+
+# - name: Download ubuntu server iso
+#   shell: wget https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso -O /var/lib/vz/template/iso/ubuntu-22.04.3-live-server-amd64.iso
+#   when: not ubuntu_server_iso.stat.exists
+
+
+- name: Create Zeus VM
   community.general.proxmox_kvm:
-    vmid: 102
+    vmid: 110
     node: hp
     api_user: root@pam
     api_password: "{{ proxmox_api_password }}"
     api_host: "{{ proxmox_api_host }}"
-    name: virgo
     cpulimit: 0
+    name: zeus
+    ciuser: zeus
+    cipassword: "{{ zeus_password }}"
     cores: 2
     memory: 4000
-    sata:
-      sata0: 'local-lvm:100,format=raw'
     ide:
-      ide0: local:iso/manjaro-xfce-23.0.1-230911-linux65.iso,media=cdrom,size=6734336
       ide2: local-lvm:cloudinit,media=cdrom
-    bios: ovmf
-    efidisk0:
-      storage: local-lvm
-      format: raw
-      efitype: 4m
-      pre_enrolled_keys: false
     sshkeys: "{{ ssh_public_key }}"
     nameservers:
       - '1.1.1.1'
@@ -160,18 +163,86 @@
       ipconfig0: 'ip=192.168.80.22/24,gw=192.168.80.1'
     onboot: true
     agent: true
-  register: virgo
+  register: zeus
 
-- name: Waiting to start virtual server machine completely
+- name: Waiting to start zeus virtual server machine completely
   wait_for:
-    timeout: 45
-  when: virgo.changed == true
+    timeout: 20
+  when: zeus.changed == true
 
-- name: Start VM
+- name: Check if Arch qcow file exists
+  stat:
+    path: /var/lib/vz/template/qcow/Arch-Linux-x86_64-cloudimg.qcow2
+  register: arch_qcow
+
+- name: Download arch qcow
+  shell: wget https://mirror.pkgbuild.com/images/latest/Arch-Linux-x86_64-cloudimg.qcow2 -O /var/lib/vz/template/qcow/Arch-Linux-x86_64-cloudimg.qcow2
+  when: not arch_qcow.stat.exists
+
+- name: Import arch qcow2 to zeus
+  shell: qm importdisk 110 /var/lib/vz/template/qcow/Arch-Linux-x86_64-cloudimg.qcow2 local-lvm
+  when: zeus.changed == true
+
+- name: Attach newly created disk to zeus
+  shell: qm set 110 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-110-disk-0
+  when: zeus.changed == true
+
+- name: Set boot order
+  shell: qm set 110 --boot order=scsi0
+  when: zeus.changed == true
+
+- name: Start zeus VM
   community.general.proxmox_kvm:
     api_user: root@pam
     api_password: "{{ proxmox_api_password }}"
     api_host: "{{ proxmox_api_host }}"
-    name: virgo
+    name: zeus
     node: hp
     state: started
+
+# - name: Create virgo VM
+#   community.general.proxmox_kvm:
+#     vmid: 102
+#     node: hp
+#     api_user: root@pam
+#     api_password: "{{ proxmox_api_password }}"
+#     api_host: "{{ proxmox_api_host }}"
+#     name: virgo
+#     cpulimit: 0
+#     cores: 2
+#     memory: 4000
+#     sata:
+#       sata0: 'local-lvm:100,format=raw'
+#     ide:
+#       ide0: local:iso/manjaro-xfce-23.0.1-230911-linux65.iso,media=cdrom,size=6734336
+#       ide2: local-lvm:cloudinit,media=cdrom
+#     bios: ovmf
+#     efidisk0:
+#       storage: local-lvm
+#       format: raw
+#       efitype: 4m
+#       pre_enrolled_keys: false
+#     sshkeys: "{{ ssh_public_key }}"
+#     nameservers:
+#       - '1.1.1.1'
+#     net:
+#       net0: 'virtio,bridge=vmbr0'
+#     ipconfig:
+#       ipconfig0: 'ip=192.168.80.23/24,gw=192.168.80.1'
+#     onboot: true
+#     agent: true
+#   register: virgo
+
+# - name: Waiting to start virtual server machine completely
+#   wait_for:
+#     timeout: 45
+#   when: virgo.changed == true
+
+# - name: Start VM
+#   community.general.proxmox_kvm:
+#     api_user: root@pam
+#     api_password: "{{ proxmox_api_password }}"
+#     api_host: "{{ proxmox_api_host }}"
+#     name: virgo
+#     node: hp
+#     state: started
