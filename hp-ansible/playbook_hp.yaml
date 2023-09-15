@@ -2,6 +2,10 @@
   roles:
   - role: roles/proxmox
 
+- hosts: zeus
+  roles:
+  - role: roles/zeus
+
 - hosts: titanic
   roles:
-  - role: roles/docker
+  - role: roles/titanic

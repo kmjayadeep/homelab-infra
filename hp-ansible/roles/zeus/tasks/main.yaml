@@ -1,0 +1,31 @@
+- name: Update cache
+  community.general.pacman:
+    update_cache: true
+  become: true
+
+- name: Upgrade pacman packages
+  community.general.pacman:
+    upgrade: true
+  become: true
+
+- name: Install qemu quest agent
+  community.general.pacman:
+    name: qemu-guest-agent
+    state: present
+  become: true
+
+- name: Install Docker
+  community.general.pacman:
+    name: docker
+    state: present
+  become: true
+
+- name: Enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+
+- name: Start docker
+  ansible.builtin.systemd:
+    state: started
+    name: docker
