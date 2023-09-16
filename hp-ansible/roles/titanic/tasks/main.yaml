@@ -71,4 +71,7 @@
     exposed_ports:
     - 9443
     - 8000
+    published_ports:
+    - 9443:9443
+    - 8000:8000
     restart_policy: always
