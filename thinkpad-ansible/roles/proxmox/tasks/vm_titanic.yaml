@@ -10,7 +10,7 @@
     ciuser: titanic
     cipassword: "{{ titanic_password }}"
     cores: 2
-    memory: 4000
+    memory: 4500
     ide:
       ide2: local-lvm:cloudinit,media=cdrom
     sshkeys: "{{ ssh_public_key }}"

@@ -1,0 +1,3 @@
+/srv/k8s *(rw,sync,subtree_check)
+/srv/media *(rw,async,subtree_check)
+/scratch *(rw,async,no_subtree_check,no_root_squash)

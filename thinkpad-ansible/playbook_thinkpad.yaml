@@ -1,6 +1,10 @@
-# - hosts: prox
-#   roles:
-#   - role: roles/proxmox
+- hosts: prox
+  roles:
+  - role: roles/proxmox
+
+- hosts: zeus
+  roles:
+  - role: roles/zeus
 
 - hosts: titanic
   roles:

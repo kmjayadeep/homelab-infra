@@ -1,0 +1,22 @@
+- name: Install packages
+  ansible.builtin.apt:
+    pkg:
+    - nfs-kernel-server
+
+- name: "Mkdir nfs dirs"
+  shell: |
+    mkdir -p /srv/k8s /srv/media /scratch
+
+- name: Copy exports config
+  copy:
+    dest: /etc/exports
+    group: root
+    mode: 0644
+    owner: root
+    src: files/exports
+  register: export_changed
+
+
+- name: "Apply nfs"
+  shell: |
+    exportfs -a

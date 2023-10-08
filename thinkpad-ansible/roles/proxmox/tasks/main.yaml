@@ -56,5 +56,8 @@
   command: tailscale up --accept-dns=false --advertise-routes=192.168.0.0/24 --authkey="{{ tailscale_key }}"
   when: not tailscale_bin.stat.exists
 
-- name: Setup titanic VM
+- name: setup zeus vm
+  include_tasks: lxc_zeus.yaml
+
+- name: setup titanic vm
   include_tasks: vm_titanic.yaml

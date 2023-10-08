@@ -37,6 +37,7 @@
     name:
     - iptables-nft
     - docker
+    - podman
     state: present
 
 - name: Start docker
