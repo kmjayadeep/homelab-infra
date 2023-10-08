@@ -1,0 +1,8 @@
+# - hosts: prox
+#   roles:
+#   - role: roles/proxmox
+
+- hosts: titanic
+  roles:
+  - role: roles/titanic
+  become: true
