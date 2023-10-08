@@ -1,0 +1,57 @@
+- name: Copy tailscale install script
+  copy:
+    dest: /usr/local/bin/tailscale-install.sh
+    group: root
+    mode: 0744
+    owner: root
+    src: files/tailscale-install.sh
+
+- name: Disable enterprise packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Disable ceph packages repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/ceph.list
+    state: absent
+
+- name: Enable cronjob for dead mans snitch
+  ansible.builtin.cron:
+    name: "deadmansnitch"
+    minute: "*"
+    hour: "*"
+    job: "curl https://hc-ping.com/b04d64a8-6d26-4c20-b158-9c6e23123c9f"
+
+- name: install proxmoxer
+  apt: name=python3-proxmoxer state=present update_cache=true
+
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: enable ipv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: enable ipv6 forwarding
+  sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Check if tailscale already installed
+  stat:
+    path: /usr/bin/tailscale
+  register: tailscale_bin
+
+- name: Install tailscale
+  command: /usr/local/bin/tailscale-install.sh
+  when: not tailscale_bin.stat.exists
+
+- name: Start tailscale
+  command: tailscale up --accept-dns=false --advertise-routes=192.168.0.0/24 --authkey="{{ tailscale_key }}"
+  when: not tailscale_bin.stat.exists
