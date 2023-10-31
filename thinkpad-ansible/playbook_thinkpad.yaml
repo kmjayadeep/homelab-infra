@@ -6,7 +6,7 @@
   roles:
   - role: roles/zeus
 
-- hosts: titanic
+- hosts: k3s
   roles:
   - role: roles/titanic
   become: true

@@ -1,68 +1,36 @@
-- name: ensure docker conf directory exists
-  file:
-    path: /etc/docker
-    recurse: true
-    state: directory
+- name: Check if k3s already installed
+  stat:
+    path: /etc/systemd/system/k3s.service
+  register: k3s_service_file
 
-- name: Copy docker daemon config
-  copy:
-    dest: /etc/docker/daemon.json
-    group: root
-    mode: 0644
+- name: Download k3s binary x64
+  get_url:
+    url: https://get.k3s.io
+    checksum: sha256:ff8b7b4028299c878180c1288efa73205c54c7c3fbc2d313fcc666374526d221
+    dest: /tmp/k3s_install.sh
     owner: root
-    src: files/daemon.json
-
-- name: ensure docker service directory exists
-  file:
-    path: /etc/systemd/system/docker.service.d/
-    recurse: true
-    state: directory
-
-- name: Copy docker service override
-  copy:
-    dest: /etc/systemd/system/docker.service.d/override.conf
     group: root
-    mode: 0644
-    owner: root
-    src: files/service-override.conf
+    mode: 0755
+  when: not k3s_service_file.stat.exists
 
-- name: Uninstall iptables
-  community.general.pacman:
-    name: iptables
-    state: absent
-    force: true
+- name: Install k3s
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    INSTALL_K3S_EXEC: 'server --disable traefik --disable servicelb --disable metrics-server --disable-cloud-controller
+       --kube-controller-manager-arg=--node-cidr-mask-size-ipv6={{ node_cidr_mask_size_ipv6 }}
+       --kube-proxy-arg proxy-mode=ipvs
+       --cluster-cidr={{ cluster_cidr }} --service-cidr={{ service_cidr}} --snapshotter native
+       --disable-network-policy --flannel-backend=none --node-ip={{ node_ip}} --disable local-storage'
+  command: /tmp/k3s_install.sh
+  when: not k3s_service_file.stat.exists
 
-- name: Install packages
-  community.general.pacman:
-    name:
-    - iptables-nft
-    - docker
-    - podman
-    state: present
-
-- name: Start docker
-  ansible.builtin.systemd:
-    name: docker
-    state: started
-    enabled: true
-
-- name: Create a volume
-  community.docker.docker_volume:
-    name: portainer_data
-
-# Run portainer
-# docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
-- name: Run portainer as container
-  community.docker.docker_container:
-    name: portainer
-    image: portainer/portainer-ce:latest
-    volumes:
-    - portainer_data:/data
-    - /var/run/docker.sock:/var/run/docker.sock
-    exposed_ports:
-    - 9443
-    - 8000
-    published_ports:
-    - 9443:9443
-    - 8000:8000
-    restart_policy: always
+- name: Replace kubeconfig vars
+  replace:
+    path: /etc/rancher/k3s/k3s.yaml
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+  - regexp: 'https://127.0.0.1:6443'
+    replace: 'https://{{ master_ip }}:6443'
+  - regexp: "default"
+    replace: "{{ cluster_name }}"
