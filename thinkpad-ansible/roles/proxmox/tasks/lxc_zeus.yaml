@@ -19,9 +19,9 @@
     hostname: zeus
     password: "{{ zeus_password }}"
     storage: "local-lvm"
-    cpus: 2
-    disk: 100
-    memory: 4000
+    cpus: 1
+    disk: 60
+    memory: 2000
     swap: 4000
     tags: "nfs"
     pubkey: "{{ ssh_public_key }}"

@@ -9,8 +9,8 @@
     name: titanic
     ciuser: titanic
     cipassword: "{{ titanic_password }}"
-    cores: 2
-    memory: 4500
+    cores: 3
+    memory: 5000
     ide:
       ide2: local-lvm:cloudinit,media=cdrom
     sshkeys: "{{ ssh_public_key }}"
@@ -52,7 +52,7 @@
   when: titanic.changed == true
 
 - name: Resize titanic disk
-  shell: qm disk resize 110 scsi0 50G
+  shell: qm disk resize 110 scsi0 60G
   when: titanic.changed == true
 
 - name: Set boot order
