@@ -30,6 +30,9 @@
 - name: install proxmoxer
   apt: name=python3-proxmoxer state=present update_cache=yes
 
+- name: install open-iscsi for longhorn
+  apt: name=open-iscsi state=present
+
 # Run `pveam available to list available templates`
 - name: Check if debian template file exists
   stat:
@@ -52,7 +55,7 @@
     password: "{{ cosmos_password }}"
     storage: "local-lvm"
     cpus: 4
-    disk: 100
+    disk: 138
     memory: 12288
     swap: 0
     tags: "k8s"
