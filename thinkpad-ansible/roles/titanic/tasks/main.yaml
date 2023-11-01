@@ -24,9 +24,16 @@
   command: /tmp/k3s_install.sh
   when: not k3s_service_file.stat.exists
 
+- name: Copy kubeconfig to home dir
+  shell: |
+    mkdir -p /home/titanic/.kube
+    cp /etc/rancher/k3s/k3s.yaml /home/titanic/.kube/config
+    chown titanic:titanic /home/titanic/.kube/config
+    chmod 600 /home/titanic/.kube/config
+
 - name: Replace kubeconfig vars
   replace:
-    path: /etc/rancher/k3s/k3s.yaml
+    path: /home/titanic/.kube/config
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
   loop:
