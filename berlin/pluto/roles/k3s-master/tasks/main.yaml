@@ -3,6 +3,7 @@
   community.general.pacman:
     name:
     - open-iscsi
+    - nfs-utils
     state: present
 
 - name: Enable iscsi service for longhorn
