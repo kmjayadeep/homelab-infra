@@ -2,11 +2,11 @@
   roles:
   - role: roles/proxmox
 
-- hosts: zeus
+- hosts: nfs
   roles:
-  - role: roles/zeus
+  - role: roles/nfs
 
 - hosts: k3s
   roles:
-  - role: roles/titanic
+  - role: roles/k3s-worker
   become: true
