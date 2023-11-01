@@ -1,13 +1,14 @@
-- name: install pip3
-  apt: name=python3-pip state=present
-
-- name: install open-iscsi for longhorn
-  apt: name=open-iscsi state=present
+- name: Install pip3
+  community.general.pacman:
+    name:
+    - python-pip
+    - python-setuptools
+    state: present
 
 - name: "Configure pip3 to install packages"
   shell: |
     mkdir -p /root/.config/pip
-    echo "[global]\nbreak-system-packages = true" >  /root/.config/pip/pip.conf
+    echo -e "[global]\nbreak-system-packages = true" >  /root/.config/pip/pip.conf
 
 - name: install pre-requisites
   pip:

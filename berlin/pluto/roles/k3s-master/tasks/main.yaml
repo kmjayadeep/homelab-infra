@@ -1,26 +1,21 @@
----
-- name: Copy kmsg script
-  copy:
-    dest: /usr/local/bin/conf-kmsg.sh
-    group: root
-    mode: 0744
-    owner: root
-    src: files/conf-kmsg.sh
+# For longhorn
+- name: Install packages
+  community.general.pacman:
+    name:
+    - open-iscsi
+    state: present
 
-- name: Copy kmsg service
-  copy:
-    dest: /etc/systemd/system/conf-kmsg.service
-    group: root
-    mode: 0644
-    owner: root
-    src: files/conf-kmsg.service
+- name: Enable iscsi service for longhorn
+  ansible.builtin.systemd:
+    name: iscsi
+    enabled: true
+  become: true
 
-- name: Enable kmsg service
+- name: Start iscsi
   ansible.builtin.systemd:
     state: started
-    enabled: true
-    daemon_reload: true
-    name: conf-kmsg
+    name: iscsi
+  become: true
 
 - name: Check if k3s already installed
   stat:
@@ -30,7 +25,7 @@
 - name: Download k3s binary x64
   get_url:
     url: https://get.k3s.io
-    checksum: sha256:fbcfd9f516127878984a81f1f25b085f5913933171977bfdf5189e95df3f4fc1
+    checksum: sha256:ff8b7b4028299c878180c1288efa73205c54c7c3fbc2d313fcc666374526d221
     dest: /tmp/k3s_install.sh
     owner: root
     group: root
@@ -48,23 +43,20 @@
   command: /tmp/k3s_install.sh
   when: not k3s_service_file.stat.exists
 
+- name: Copy kubeconfig to home dir
+  shell: |
+    mkdir -p /home/cosmos/.kube
+    cp /etc/rancher/k3s/k3s.yaml /home/cosmos/.kube/config
+    chown cosmos:cosmos /home/cosmos/.kube/config
+    chmod 600 /home/cosmos/.kube/config
+
 - name: Replace kubeconfig vars
   replace:
-    path: /etc/rancher/k3s/k3s.yaml
+    path: /home/cosmos/.kube/config
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
   loop:
   - regexp: 'https://127.0.0.1:6443'
-    replace: 'https://{{ master_ip}}:6443'
+    replace: 'https://{{ master_ip }}:6443'
   - regexp: "default"
     replace: "{{ cluster_name }}"
-
-- name: Create storage directories
-  file:
-    path: "{{ item }}"
-    state: directory
-  loop:
-    - /mnt/media/movies
-    - /mnt/media/shows
-    - /mnt/downloads/incomplete
-    - /mnt/downloads/completed
