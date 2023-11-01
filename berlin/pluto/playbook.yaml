@@ -5,8 +5,8 @@
 ## TODO:
 ## Configure cloudflare tunnel
 
-- hosts: k3s
-  roles:
-    - role: roles/k3s
-    - role: roles/k8s-setup
-    - role: roles/cilium
+# - hosts: k3s
+#   roles:
+#     - role: roles/k3s
+#     - role: roles/k8s-setup
+#     - role: roles/cilium

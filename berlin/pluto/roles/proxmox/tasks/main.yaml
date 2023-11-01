@@ -1,3 +1,11 @@
+- name: Copy tailscale install script
+  copy:
+    dest: /usr/local/bin/tailscale-install.sh
+    group: root
+    mode: 0744
+    owner: root
+    src: files/tailscale-install.sh
+
 - name: Disable enterprise packages repo
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
@@ -7,18 +15,6 @@
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/ceph.list
     state: absent
-
-- name: Enable iptable_mangle module
-  community.general.modprobe:
-    name: iptable_mangle
-    state: present
-    persistent: present
-
-- name: Enable ip6table_mangle
-  community.general.modprobe:
-    name: ip6table_mangle
-    state: present
-    persistent: present
 
 - name: Enable cronjob for dead mans snitch
   ansible.builtin.cron:
@@ -30,58 +26,35 @@
 - name: install proxmoxer
   apt: name=python3-proxmoxer state=present update_cache=yes
 
-- name: install open-iscsi for longhorn
-  apt: name=open-iscsi state=present
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: enable ipv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
 
-# Run `pveam available to list available templates`
-- name: Check if debian template file exists
+- name: enable ipv6 forwarding
+  sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Check if tailscale already installed
   stat:
-    path: /var/lib/vz/template/cache/debian-12-standard_12.0-1_amd64.tar.zst
-  register: debian_template_file
+    path: /usr/bin/tailscale
+  register: tailscale_bin
 
-- name: Download debian template if not present
-  shell: pveam download local debian-12-standard_12.0-1_amd64.tar.zst
-  when: not debian_template_file.stat.exists
+- name: Install tailscale
+  command: /usr/local/bin/tailscale-install.sh
+  when: not tailscale_bin.stat.exists
 
-- name: Create Cosmos LXC container
-  community.general.proxmox:
-    vmid: 100
-    node: pluto
-    api_user: root@pam
-    api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_api_host }}"
-    ostemplate: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"  # Template name or path
-    hostname: cosmos
-    password: "{{ cosmos_password }}"
-    storage: "local-lvm"
-    cpus: 4
-    disk: 138
-    memory: 12288
-    swap: 0
-    tags: "k8s"
-    pubkey: "{{ ssh_public_key }}"
-    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.20/24,bridge=vmbr0,ip6=2a02:8109:8400:60f4::ed0/64,gw6=2a02:8109:8400:60f4::1"}'
-    unprivileged: false
-    onboot: true
-    state: "present"
+- name: Start tailscale
+  command: tailscale up --accept-dns=false --authkey="{{ tailscale_key }}"
+  when: not tailscale_bin.stat.exists
 
-- name: Edit cosmos LXC attributes
-  ansible.builtin.blockinfile:
-    path: /etc/pve/lxc/100.conf
-    block: |
-      lxc.apparmor.profile: unconfined
-      lxc.cgroup2.devices.allow: a
-      lxc.cap.drop:
-      lxc.mount.auto: "proc:rw sys:rw"
-
-# - name: Push kernel boot configs
-#   shell: pct push 100 /boot/config-$(uname -r) /boot/config-$(uname -r)
-
-- name: Start cosmos LXC container
-  community.general.proxmox:
-    vmid: 100
-    node: pluto
-    api_user: root@pam
-    api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_api_host }}"
-    state: "started"
+- name: setup cosmos vm
+  include_tasks: vm_cosmos.yaml
