@@ -41,6 +41,7 @@
        --kube-proxy-arg proxy-mode=ipvs
        --cluster-cidr={{ cluster_cidr }} --service-cidr={{ service_cidr}} --snapshotter native
        --disable-network-policy --flannel-backend=none --node-ip={{ node_ip}} --disable local-storage'
+    K3S_TOKEN: "{{ k3s_token }}"
   command: /tmp/k3s_install.sh
   when: not k3s_service_file.stat.exists
 

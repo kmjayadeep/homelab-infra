@@ -10,7 +10,7 @@
     ciuser: titanic
     cipassword: "{{ titanic_password }}"
     cores: 3
-    memory: 5000
+    memory: 6000
     ide:
       ide2: local-lvm:cloudinit,media=cdrom
     sshkeys: "{{ ssh_public_key }}"
@@ -22,6 +22,7 @@
       ipconfig0: 'ip=192.168.0.30/24,gw=192.168.0.1'
     onboot: true
     agent: true
+    tags: "k3s"
   register: titanic
 
 - name: Waiting to start titanic virtual server machine completely
