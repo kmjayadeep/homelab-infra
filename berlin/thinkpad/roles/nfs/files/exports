@@ -1,2 +1,3 @@
 /srv/media *(rw,async,subtree_check)
 /srv/downloads *(rw,async,subtree_check)
+/srv/longhorn *(rw,async,subtree_check)

@@ -5,7 +5,7 @@
 
 - name: "Mkdir nfs dirs"
   shell: |
-    mkdir -p /srv/media/movies /srv/media/shows /srv/media/home /srv/downloads
+    mkdir -p /srv/media/movies /srv/media/shows /srv/media/home /srv/downloads /srv/longhorn
 
 - name: Copy exports config
   copy:
