@@ -2,6 +2,11 @@
   roles:
   - role: roles/proxmox
 
+- hosts: k3s
+  roles:
+  - role: roles/tailscale
+  become: true
+
 - hosts: nfs
   roles:
   - role: roles/nfs
