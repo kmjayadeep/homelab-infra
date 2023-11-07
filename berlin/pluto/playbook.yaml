@@ -2,12 +2,10 @@
   roles:
   - role: roles/proxmox
 
-## TODO:
-## Configure cloudflare tunnel
-
 - hosts: cosmos
   roles:
+  - role: roles/tailscale
   - role: roles/k3s-master
-  - role: roles/k8s-setup
+  - role: roles/k8s-init
   - role: roles/cilium
   become: true
