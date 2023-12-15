@@ -58,3 +58,6 @@
 
 - name: setup cosmos vm
   include_tasks: vm_cosmos.yaml
+
+- name: setup zeus lxc
+  include_tasks: lxc_zeus.yaml

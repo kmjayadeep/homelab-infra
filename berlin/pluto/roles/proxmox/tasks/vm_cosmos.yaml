@@ -53,7 +53,7 @@
   when: cosmos.changed == true
 
 - name: Resize cosmos disk
-  shell: qm disk resize 210 scsi0 120G
+  shell: qm disk resize 210 scsi0 250G
   when: cosmos.changed == true
 
 - name: Set boot order

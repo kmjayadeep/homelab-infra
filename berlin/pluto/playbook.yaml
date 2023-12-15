@@ -9,3 +9,7 @@
   - role: roles/k8s-init
   - role: roles/cilium
   become: true
+
+- hosts: nfs
+  roles:
+  - role: roles/nfs

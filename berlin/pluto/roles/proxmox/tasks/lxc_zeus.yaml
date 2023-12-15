@@ -1,0 +1,48 @@
+# Run `pveam available to list available templates`
+- name: Check if debian template file exists
+  stat:
+    path: /var/lib/vz/template/cache/debian-12-standard_12.0-1_amd64.tar.zst
+  register: debian_template_file
+
+- name: Download debian template if not present
+  shell: pveam download local debian-12-standard_12.2-1_amd64.tar.zst
+  when: not debian_template_file.stat.exists
+
+- name: Create Zeus LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    ostemplate: "local:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst"  # Template name or path
+    hostname: zeus
+    password: "{{ zeus_password }}"
+    storage: "local-lvm"
+    cpus: 1
+    disk: 60
+    memory: 2000
+    swap: 4000
+    tags: "nfs"
+    pubkey: "{{ ssh_public_key }}"
+    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.21/24,bridge=vmbr0"}'
+    unprivileged: false
+    onboot: true
+    state: "present"
+    features:
+    - nesting=1
+
+- name: Edit zeus LXC attributes
+  ansible.builtin.blockinfile:
+    path: /etc/pve/lxc/100.conf
+    block: |
+      lxc.apparmor.profile: unconfined
+
+- name: Start zeus LXC container
+  community.general.proxmox:
+    vmid: 100
+    node: pluto
+    api_user: root@pam
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ proxmox_api_host }}"
+    state: "started"
