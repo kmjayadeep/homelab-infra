@@ -26,7 +26,7 @@
 - name: Download k3s binary x64
   get_url:
     url: https://get.k3s.io
-    checksum: sha256:ff8b7b4028299c878180c1288efa73205c54c7c3fbc2d313fcc666374526d221
+    checksum: sha256:431c6fe653336279073e5b913557aa22d7ef1794b30b4f02002b4482910464d7
     dest: /tmp/k3s_install.sh
     owner: root
     group: root
