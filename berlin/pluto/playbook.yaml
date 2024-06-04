@@ -1,7 +1,6 @@
 - hosts: prox
   roles:
   - role: roles/proxmox
-  - role: roles/tailscale
 
 - hosts: cosmos
   roles:
