@@ -33,5 +33,5 @@
   when: not tailscale_bin.stat.exists
 
 - name: Start tailscale
-  command: tailscale up --accept-dns=true --authkey="{{ tailscale_key }}"
+  command: tailscale up --accept-dns=false --advertise-routes=192.168.1.0/24 --authkey="{{ tailscale_key }}"
   when: not tailscale_bin.stat.exists

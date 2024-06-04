@@ -1,6 +1,7 @@
 - hosts: prox
   roles:
   - role: roles/proxmox
+  - role: roles/tailscale
 
 - hosts: cosmos
   roles:
@@ -9,7 +10,3 @@
   - role: roles/k8s-init
   - role: roles/cilium
   become: true
-
-- hosts: nfs
-  roles:
-  - role: roles/nfs
