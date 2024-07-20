@@ -10,6 +10,9 @@
         modules = [
           disko.nixosModules.disko
           ./configuration.nix
+          {
+            networking.hostName = "titania";
+          }
         ];
       };
     };
