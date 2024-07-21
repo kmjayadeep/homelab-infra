@@ -3,7 +3,7 @@ resource "proxmox_vm_qemu" "cosmos" {
   agent                       = 1
   agent_timeout               = null
   args                        = null
-  automatic_reboot            = null
+  automatic_reboot            = false
   balloon                     = 0
   bios                        = "seabios"
   boot                        = "order=scsi0"
