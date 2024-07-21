@@ -30,10 +30,11 @@
   };
   services.openssh.enable = true;
 
-  environment.systemPackages = map lib.lowPrio [
-    pkgs.curl
-    pkgs.gitMinimal
-    pkgs.nfs-utils
+  environment.systemPackages = with pkgs; [
+    curl
+    gitMinimal
+    nfs-utils
+    vim
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [
@@ -80,6 +81,8 @@
       "--node-ip=192.168.1.40,fe80::ccc"
       "--disable local-storage"
       "--disable-helm-controller"
+      "--write-kubeconfig /root/.kube/config"
+      "--write-kubeconfig-mode 644"
     ];
   };
 
