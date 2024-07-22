@@ -55,6 +55,26 @@
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
   };
 
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
+
+  services.tailscale = {
+    enable = true;
+    extraSetFlags = [
+      "--accept-dns=false"
+    ];
+    extraUpFlags = [
+      "--accept-dns=false"
+    ];
+  };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 ];
+  };
+
   services.openiscsi = {
     enable = true;
     name = "${config.networking.hostName}-initiatorhost";
