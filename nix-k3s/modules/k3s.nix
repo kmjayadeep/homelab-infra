@@ -14,7 +14,7 @@
       "--service-cidr=10.43.0.0/16,2001:cafe:43::/112"
       "--snapshotter native"
       "--disable-network-policy"
-      "--node-ip=192.168.1.40"
+      "--node-ip=192.168.1.40,fe80::ccc"
       "--disable local-storage"
       "--disable-helm-controller"
       "--write-kubeconfig /home/operator/.kube/config"
