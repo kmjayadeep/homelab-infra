@@ -10,7 +10,7 @@
       "--disable-cloud-controller"
       "--kube-controller-manager-arg=--node-cidr-mask-size-ipv6=112"
       "--kube-proxy-arg proxy-mode=ipvs"
-      "--cluster-cidr=10.42.0.0/16,2001:cafe:42::/56"
+      "--cluster-cidr=10.42.0.0/16,2001:cafe:42::/96"
       "--service-cidr=10.43.0.0/16,2001:cafe:43::/112"
       "--snapshotter native"
       "--disable-network-policy"

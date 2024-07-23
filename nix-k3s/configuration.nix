@@ -80,11 +80,6 @@
     ];
   };
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 ];
-  };
-
   services.openiscsi = {
     enable = true;
     name = "${config.networking.hostName}-initiatorhost";
