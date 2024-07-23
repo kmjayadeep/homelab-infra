@@ -55,7 +55,10 @@
       interface = "ens18";
     };
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
+    useNetworkd = true;
   };
+
+  services.resolved.enable = false;
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
