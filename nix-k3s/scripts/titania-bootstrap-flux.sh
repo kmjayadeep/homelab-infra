@@ -5,6 +5,8 @@ set -euo pipefail
 
 kubectx titania
 
+kubectl apply -f sealed-secret.yaml
+
 export GITHUB_TOKEN=$(pass github/token)
 export GITHUB_USER=kmjayadeep
 flux bootstrap github \
