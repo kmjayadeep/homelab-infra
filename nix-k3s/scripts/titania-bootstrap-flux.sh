@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # flux.sh: Bootstrap fluxcd
 
@@ -11,4 +12,5 @@ flux bootstrap github \
   --repository=homelab-k8s \
   --branch=main \
   --path=./clusters/titania/bootstrap \
-  --personal
+  --personal \
+  --components-extra image-reflector-controller,image-automation-controller

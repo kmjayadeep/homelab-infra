@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # nix-install.sh: Install nixos-anywhere on target
 # Make sure the server is accessible with the given port and user using my ssh ssh key
