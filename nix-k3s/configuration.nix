@@ -21,6 +21,8 @@
     '';
   };
 
+  time.timeZone = "Europe/Zurich";
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -61,6 +63,7 @@
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
     useNetworkd = true;
     dhcpcd.IPv6rs = true; # Enable getting public IPv6 from router
+    firewall.enable = false;
   };
 
   services.resolved.enable = false;
