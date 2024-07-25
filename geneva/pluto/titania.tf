@@ -11,7 +11,7 @@ resource "proxmox_vm_qemu" "titania" {
   cpu                         = "x86-64-v2-AES"
   hotplug                     = "network,disk,usb"
   kvm                         = true
-  memory                      = 2048
+  memory                      = 4096
   name                        = "titania"
   numa                        = false
   onboot                      = true
