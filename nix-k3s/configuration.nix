@@ -46,6 +46,7 @@
     # Longhorn expects iscsiadm here
     ''
     ln -sf /run/current-system/sw/bin/iscsiadm /usr/bin/iscsiadm
+    ln -sf /run/wrappers/bin/mount /usr/bin/mount
     '';
   };
 
