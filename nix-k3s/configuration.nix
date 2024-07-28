@@ -99,6 +99,7 @@
 
   boot.supportedFilesystems = [ "nfs" ];
   services.rpcbind.enable = true;
+  services.qemuGuest.enable = true;
 
   system.stateVersion = "24.04";
 }
