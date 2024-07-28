@@ -80,6 +80,7 @@
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
+    "fs.inotify.max_user_instances" = 1024;
   };
 
   services.tailscale = {
