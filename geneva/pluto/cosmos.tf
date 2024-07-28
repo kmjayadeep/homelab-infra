@@ -14,7 +14,7 @@ resource "proxmox_vm_qemu" "cosmos" {
   ciuser                      = "cosmos"
   clone                       = null
   clone_wait                  = null
-  cores                       = 4
+  cores                       = 2
   cpu                         = "host"
   define_connection_info      = false
   desc                        = null
@@ -42,7 +42,7 @@ resource "proxmox_vm_qemu" "cosmos" {
   ipconfig9                   = null
   kvm                         = true
   machine                     = "q35"
-  memory                      = 13000
+  memory                      = 6500
   name                        = "cosmos"
   nameserver                  = "1.1.1.1"
   numa                        = false
