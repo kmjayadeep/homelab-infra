@@ -18,6 +18,7 @@ resource "proxmox_vm_qemu" "titania" {
   protection                  = false
   full_clone                  = false
   qemu_os                     = "l26"
+  agent                       = 1
   scsihw                      = "virtio-scsi-single"
   sockets                     = 1
   tablet                      = true
