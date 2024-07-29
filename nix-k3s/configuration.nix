@@ -78,9 +78,15 @@
   services.resolved.enable = true;
 
   boot.kernel.sysctl = {
+    "fs.inotify.max_user_instances" = 1024;
+
+    # Need for tailscale
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
-    "fs.inotify.max_user_instances" = 1024;
+
+    # https://www.blackmoreops.com/2014/09/22/linux-kernel-panic-issue-fix-hung_task_timeout_secs-blocked-120-seconds-problem/
+    "vm.dirty_ratio" = 10;
+    "vm.dirty_background_ratio" = 5;
   };
 
   services.tailscale = {
