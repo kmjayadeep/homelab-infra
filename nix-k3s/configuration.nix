@@ -43,9 +43,10 @@
   ];
 
   system.activationScripts = { setupIscsi.text =
-    # Longhorn expects iscsiadm here
+    # Longhorn expects these binaries in PATH
     ''
     ln -sf /run/current-system/sw/bin/iscsiadm /usr/bin/iscsiadm
+    ln -sf /run/current-system/sw/bin/fstrim /usr/bin/fstrim
     ln -sf /run/wrappers/bin/mount /usr/bin/mount
     '';
   };
