@@ -53,7 +53,7 @@ resource "proxmox_vm_qemu" "titania" {
           mbps_wr_concurrent   = 0
           readonly             = false
           replicate            = true
-          size                 = "100G"
+          size                 = "200G"
           storage              = "local-lvm"
         }
       }
