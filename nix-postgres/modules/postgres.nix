@@ -31,4 +31,14 @@
     '';
   };
 
+  services.postgresqlBackup = {
+    enable = true;
+    startAt = "hourly";
+    databases = [
+      "immich"
+      "totp"
+      "planka"
+    ];
+  };
+
 }
