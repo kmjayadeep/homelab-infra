@@ -31,14 +31,30 @@
     '';
   };
 
-  services.postgresqlBackup = {
-    enable = true;
-    startAt = "hourly";
-    databases = [
-      "immich"
-      "totp"
-      "planka"
-    ];
+  systemd.services.backup-postgres = {
+    description = "Backup the Postgres db using restic";
+    wants = ["network-online.target"];
+    after = ["network-online.target"];
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "postgres";
+    };
+
+    script = ''
+      set -eu
+      mkdir -p /tmp/postgres-backup
+      ${pkgs.postgresql_16}/bin/pg_dump totp > /tmp/postgres-backup/totp.sql
+      ${pkgs.postgresql_16}/bin/pg_dump planka > /tmp/postgres-backup/planka.sql
+    '';
+  };
+
+  systemd.timers.backup-postgres = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+    };
   };
 
 }
