@@ -5,6 +5,7 @@
     ./disk-config.nix
     ./modules/user.nix
     ./modules/postgres.nix
+    ./modules/monitoring.nix
   ];
 
   nix = {
