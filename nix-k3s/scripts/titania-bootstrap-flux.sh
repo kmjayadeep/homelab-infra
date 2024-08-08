@@ -15,4 +15,5 @@ flux bootstrap github \
   --branch=main \
   --path=./clusters/titania/bootstrap \
   --personal \
+  --read-write-key \
   --components-extra image-reflector-controller,image-automation-controller
