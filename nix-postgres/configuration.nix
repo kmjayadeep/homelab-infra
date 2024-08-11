@@ -3,8 +3,10 @@
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
+    ./modules/backup.nix
     ./modules/user.nix
     ./modules/postgres.nix
+    ./modules/pgweb.nix
     ./modules/monitoring.nix
   ];
 
