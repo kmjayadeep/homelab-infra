@@ -25,10 +25,11 @@ Make changes to nix files and run the following command to apply the changes
 make rebuild
 ```
 
-## Tailscale
+## Valhelm game server
 
-Need to login to tailscale manually
+reference:
+https://kevincox.ca/2022/12/09/valheim-server-nixos-v2/
 
 ```
-tailscale up
+make rebuild
 ```

@@ -4,6 +4,8 @@
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
     ./modules/user.nix
+    ./modules/valheim.nix
+    ./modules/steam.nix
   ];
 
   nix = {
@@ -20,7 +22,7 @@
     '';
   };
 
-  time.timeZone = "Europe/Zurich";
+  time.timeZone = "Asia/Kolkata";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
