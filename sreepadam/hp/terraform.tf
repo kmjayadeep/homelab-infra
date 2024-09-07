@@ -9,6 +9,5 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url = "https://192.168.80.20:8006/api2/json"
-  # pm_api_url = "https://hp.sreepadam.cboxlab.com:8006/api2/json"
+  pm_api_url = "https://hp.sreepadam.cboxlab.com:8006/api2/json"
 }
