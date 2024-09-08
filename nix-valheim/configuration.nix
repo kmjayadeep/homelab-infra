@@ -4,8 +4,10 @@
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
     ./modules/user.nix
-    ./modules/valheim.nix
-    ./modules/steam.nix
+    ./modules/valheim-server.nix
+    ./modules/secret-valheim.nix
+    # ./modules/valheim.nix
+    # ./modules/steam.nix
   ];
 
   nix = {
