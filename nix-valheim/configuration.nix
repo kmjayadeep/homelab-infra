@@ -7,6 +7,7 @@
     ./modules/valheim-server.nix
     ./modules/secret-valheim.nix
     ./modules/tailscale.nix
+    ./modules/http-server.nix
   ];
 
   nix = {

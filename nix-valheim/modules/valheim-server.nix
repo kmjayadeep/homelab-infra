@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  ...  
+  ...
 }: {
   services.valheim = {
     enable = true;
