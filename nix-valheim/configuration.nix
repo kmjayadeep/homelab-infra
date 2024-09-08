@@ -6,8 +6,7 @@
     ./modules/user.nix
     ./modules/valheim-server.nix
     ./modules/secret-valheim.nix
-    # ./modules/valheim.nix
-    # ./modules/steam.nix
+    ./modules/tailscale.nix
   ];
 
   nix = {

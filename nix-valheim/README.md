@@ -28,8 +28,17 @@ make rebuild
 ## Valhelm game server
 
 reference:
-https://kevincox.ca/2022/12/09/valheim-server-nixos-v2/
+https://kevincox.ca/2022/12/09/valheim-server-nixos-v2/ - not working
+https://github.com/aidalgol/valheim-server-flake/blob/main/pkgs/valheim-server/default.nix
 
 ```
 make rebuild
+```
+
+## Tailscale
+
+Need to login to tailscale manually
+
+```
+tailscale up
 ```
