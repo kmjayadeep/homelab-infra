@@ -8,6 +8,7 @@
     ./modules/secret-valheim.nix
     ./modules/tailscale.nix
     ./modules/http-server.nix
+    ./modules/backup.nix
   ];
 
   nix = {
@@ -39,6 +40,7 @@
   environment.systemPackages = with pkgs; [
     curl
     vim
+    htop
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [
