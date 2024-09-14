@@ -16,9 +16,17 @@
           disko.nixosModules.disko
           valheim-server.nixosModules.default
           ./configuration.nix
-          {
-            networking.hostName = "valheim";
-          }
+          ./hosts/valheim.nix
+        ];
+      };
+
+      nixosConfigurations.disneyland = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          disko.nixosModules.disko
+          valheim-server.nixosModules.default
+          ./configuration.nix
+          ./hosts/disneyland.nix
         ];
       };
     };

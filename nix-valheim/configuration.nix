@@ -48,20 +48,6 @@
   ];
 
   networking = {
-    interfaces.ens18 = {
-      ipv4.addresses = [{
-        address = "192.168.80.25";
-        prefixLength = 24;
-      }];
-      ipv6.addresses = [{
-        address = "fe80::100";
-        prefixLength = 64;
-      }];
-    };
-    defaultGateway = {
-      address = "192.168.80.1";
-      interface = "ens18";
-    };
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
     useNetworkd = true;
     dhcpcd.IPv6rs = true; # Enable getting public IPv6 from router

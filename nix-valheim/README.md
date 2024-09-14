@@ -6,15 +6,23 @@ Setup the VM using terraform script at <../sreepadam/hp>
 Boot into the nixos installer image and set static ip address
 
 ```
+# for valheim
 ip addr add 192.168.80.25/24 dev ens18
+
+# for disneyland
+ip addr add 192.168.80.26/24 dev ens18
 ```
 
-Setup ssh config to be able to connect to `valheim`
+Setup ssh config to be able to connect to `valheim` and `disneyland`
 
-and run
+and run the following to install os, setup disks etc.
 
 ```
 make valheim-install
+```
+
+```
+make disneyland-install
 ```
 
 ## Changing OS stuff
@@ -40,5 +48,5 @@ make rebuild
 Need to login to tailscale manually
 
 ```
-tailscale up
+tailscale up --accept-dns=false
 ```
