@@ -1,4 +1,4 @@
-resource "proxmox_vm_qemu" "valheim" {
+resource "proxmox_vm_qemu" "disneyland" {
   target_node                 = "hp"
   balloon                     = 2048
   define_connection_info      = false
@@ -9,7 +9,7 @@ resource "proxmox_vm_qemu" "valheim" {
   hotplug                     = "network,disk,usb"
   kvm                         = true
   memory                      = 6144
-  name                        = "valheim"
+  name                        = "disneyland"
   numa                        = false
   onboot                      = true
   protection                  = false
@@ -21,7 +21,7 @@ resource "proxmox_vm_qemu" "valheim" {
   tablet                      = true
   vcpus                       = 0
   vm_state                    = "running"
-  tags                        = "game,valheim"
+  tags                        = "game,disneyland"
   disks {
     ide {
       ide2 {
