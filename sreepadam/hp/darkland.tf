@@ -1,4 +1,4 @@
-resource "proxmox_vm_qemu" "disneyland" {
+resource "proxmox_vm_qemu" "darkland" {
   target_node                 = "hp"
   balloon                     = 2048
   define_connection_info      = false
@@ -9,7 +9,7 @@ resource "proxmox_vm_qemu" "disneyland" {
   hotplug                     = "network,disk,usb"
   kvm                         = true
   memory                      = 6144
-  name                        = "disneyland"
+  name                        = "darkland"
   numa                        = false
   onboot                      = true
   protection                  = false
@@ -21,7 +21,7 @@ resource "proxmox_vm_qemu" "disneyland" {
   tablet                      = true
   vcpus                       = 0
   vm_state                    = "running"
-  tags                        = "game,disneyland"
+  tags                        = "game,darkland"
   disks {
     ide {
       ide2 {

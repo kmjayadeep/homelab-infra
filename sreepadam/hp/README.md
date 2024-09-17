@@ -16,3 +16,12 @@ pveum aclmod / -user terraform-prov@pve -role TerraformProv
 ```
 direnv allow
 ```
+
+## Install tailscale
+
+```
+ssh hp
+apt insall tailscale
+
+tailscale up --accept-dns=false --advertise-routes=192.168.80.0/24
+```
