@@ -4,5 +4,5 @@ rebuild:
 valheim-install:
 	./scripts/valheim-nix-install.sh
 
-disneyland-install:
-	./scripts/disneyland-nix-install.sh
+darkland-install:
+	./scripts/darkland-nix-install.sh

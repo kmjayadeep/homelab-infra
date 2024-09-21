@@ -9,11 +9,11 @@ Boot into the nixos installer image and set static ip address
 # for valheim
 ip addr add 192.168.80.25/24 dev ens18
 
-# for disneyland
+# for darkland
 ip addr add 192.168.80.26/24 dev ens18
 ```
 
-Setup ssh config to be able to connect to `valheim` and `disneyland`
+Setup ssh config to be able to connect to `valheim` and `darkland`
 
 and run the following to install os, setup disks etc.
 
@@ -22,7 +22,7 @@ make valheim-install
 ```
 
 ```
-make disneyland-install
+make darkland-install
 ```
 
 ## Changing OS stuff

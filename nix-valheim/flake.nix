@@ -20,13 +20,13 @@
         ];
       };
 
-      nixosConfigurations.disneyland = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.darkland = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           disko.nixosModules.disko
           valheim-server.nixosModules.default
           ./configuration.nix
-          ./hosts/disneyland.nix
+          ./hosts/darkland.nix
         ];
       };
     };
