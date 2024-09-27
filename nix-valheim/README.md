@@ -48,5 +48,5 @@ make rebuild
 Need to login to tailscale manually
 
 ```
-tailscale up --accept-dns=false
+tailscale up --accept-dns=false --accept-routes
 ```
