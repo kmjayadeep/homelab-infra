@@ -16,7 +16,9 @@ resource "minio_iam_policy" "monitoring-policy" {
         "${minio_s3_bucket.nuc-backup.arn}",
         "${minio_s3_bucket.nuc-backup.arn}/*",
         "${minio_s3_bucket.nuc-private-backup.arn}",
-        "${minio_s3_bucket.nuc-private-backup.arn}/*"
+        "${minio_s3_bucket.nuc-private-backup.arn}/*",
+        "${minio_s3_bucket.thanos-cosmos.arn}",
+        "${minio_s3_bucket.thanos-cosmos.arn}/*"
       ]
     }]
     Version = "2012-10-17"

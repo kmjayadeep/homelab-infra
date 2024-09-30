@@ -1,12 +1,8 @@
 import {
-  to = minio_s3_bucket.nuc-backup
-  id = "nuc-backup"
+  to = minio_s3_bucket.thanos-cosmos
+  id = "thanos-cosmos"
 }
 import {
-  to = minio_s3_bucket.nuc-private-backup
-  id = "nuc-private-backup"
-}
-import {
-  to = minio_iam_user.nuc
-  id = "nuc"
+  to = minio_iam_user.thanos
+  id = "thanos"
 }
