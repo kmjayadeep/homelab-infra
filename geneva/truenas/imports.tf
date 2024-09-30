@@ -1,9 +1,12 @@
 import {
-  to = minio_iam_user.valheim
-  id = "valheim"
+  to = minio_s3_bucket.nuc-backup
+  id = "nuc-backup"
 }
-
 import {
-  to = minio_iam_policy.valheim-backup-policy
-  id = "valheim-backup-policy"
+  to = minio_s3_bucket.nuc-private-backup
+  id = "nuc-private-backup"
+}
+import {
+  to = minio_iam_user.nuc
+  id = "nuc"
 }
