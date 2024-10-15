@@ -9,14 +9,14 @@ Boot into the nixos installer image and set static ip address
 # for valheim
 ip addr add 192.168.80.25/24 dev ens18
 
-# for valheim in pluto
+# for odin
 ip addr add 192.168.1.51/24 dev ens18
 
 # for darkland
 ip addr add 192.168.80.26/24 dev ens18
 ```
 
-Setup ssh config to be able to connect to `valheim` and `darkland`
+Setup ssh config to be able to connect to `valheim` and `darkland` and `odin`
 
 and run the following to install os, setup disks etc.
 
@@ -26,6 +26,10 @@ make valheim-install
 
 ```
 make darkland-install
+```
+
+```
+make odin-install
 ```
 
 ## Changing OS stuff

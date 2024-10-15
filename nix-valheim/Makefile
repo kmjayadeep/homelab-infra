@@ -6,3 +6,7 @@ valheim-install:
 
 darkland-install:
 	./scripts/darkland-nix-install.sh
+
+odin-install:
+	./scripts/odin-nix-install.sh
+

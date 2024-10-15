@@ -29,5 +29,15 @@
           ./hosts/darkland.nix
         ];
       };
+
+      nixosConfigurations.odin = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          disko.nixosModules.disko
+          valheim-server.nixosModules.default
+          ./configuration.nix
+          ./hosts/odin.nix
+        ];
+      };
     };
 }

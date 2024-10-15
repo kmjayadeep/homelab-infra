@@ -1,4 +1,4 @@
-resource "proxmox_vm_qemu" "valheim" {
+resource "proxmox_vm_qemu" "odin" {
   target_node                 = "pluto"
   balloon                     = 0
   define_connection_info      = false
@@ -9,7 +9,7 @@ resource "proxmox_vm_qemu" "valheim" {
   hotplug                     = "network,disk,usb"
   kvm                         = true
   memory                      = 2048
-  name                        = "valheim"
+  name                        = "odin"
   numa                        = false
   onboot                      = true
   protection                  = false
