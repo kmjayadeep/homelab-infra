@@ -4,11 +4,11 @@ resource "proxmox_vm_qemu" "odin" {
   define_connection_info      = false
   bios                        = "ovmf"
   boot                        = "order=scsi0;ide2;net0"
-  cores                       = 2
+  cores                       = 4
   cpu                         = "x86-64-v2-AES"
   hotplug                     = "network,disk,usb"
   kvm                         = true
-  memory                      = 2048
+  memory                      = 4096
   name                        = "odin"
   numa                        = false
   onboot                      = true

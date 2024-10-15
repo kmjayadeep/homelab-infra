@@ -55,5 +55,9 @@ make rebuild
 Need to login to tailscale manually
 
 ```
+# on non-geneva nodes
 tailscale up --accept-dns=false --accept-routes
+
+# on geneva nodes
+tailscale up --accept-dns=false
 ```
