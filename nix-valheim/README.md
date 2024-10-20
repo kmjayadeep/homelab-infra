@@ -13,7 +13,7 @@ ip addr add 192.168.80.25/24 dev ens18
 ip addr add 192.168.1.51/24 dev ens18
 
 # for darkland
-ip addr add 192.168.80.26/24 dev ens18
+ip addr add 192.168.1.61/24 dev ens18
 ```
 
 Setup ssh config to be able to connect to `valheim` and `darkland` and `odin`
