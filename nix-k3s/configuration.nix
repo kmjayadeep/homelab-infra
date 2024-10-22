@@ -32,6 +32,7 @@
     efiSupport = true;
     efiInstallAsRemovable = true;
   };
+  boot.growPartition = true;
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
