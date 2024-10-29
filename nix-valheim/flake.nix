@@ -4,11 +4,11 @@
   inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.valheim-server = {
-    url = "github:aidalgol/valheim-server-flake";
+    url = "github:kmjayadeep/valheim-server-flake/80cdc965dcf062caf7f0fc3a8fc68511a1d55567";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, disko, valheim-server, ... }:
+  outputs = { nixpkgs, disko, valheim-server,... }:
     {
       nixosConfigurations.valheim = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
