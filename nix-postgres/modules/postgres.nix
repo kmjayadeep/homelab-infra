@@ -9,6 +9,7 @@
       "planka"
       "totp"
       "immich"
+      "coder"
     ];
     ensureUsers = [
       {
@@ -21,6 +22,10 @@
       }
       {
         name = "immich";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "coder";
         ensureDBOwnership = true;
       }
       {
