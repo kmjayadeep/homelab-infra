@@ -32,3 +32,27 @@ Need to login to tailscale manually
 ```
 tailscale up
 ```
+
+## Adding new databases
+
+Add new database and user in `modules/postgres.nix`
+
+Apply using `make`
+
+Login to machine `ssh root@polaris`
+
+Switch to postgers user
+```
+su - postgres
+```
+
+connect to database
+
+```
+psql -U newuser
+```
+
+change password (and save it to password manager)
+```
+\password
+```

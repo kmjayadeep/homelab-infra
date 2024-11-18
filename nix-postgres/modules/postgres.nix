@@ -10,6 +10,7 @@
       "totp"
       "immich"
       "coder"
+      "shoppinglist"
     ];
     ensureUsers = [
       {
@@ -26,6 +27,10 @@
       }
       {
         name = "coder";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "shoppinglist";
         ensureDBOwnership = true;
       }
       {
