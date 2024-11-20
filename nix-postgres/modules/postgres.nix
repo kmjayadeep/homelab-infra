@@ -11,6 +11,7 @@
       "immich"
       "coder"
       "shoppinglist"
+      "uptimekuma"
     ];
     ensureUsers = [
       {
@@ -31,6 +32,10 @@
       }
       {
         name = "shoppinglist";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "uptimekuma";
         ensureDBOwnership = true;
       }
       {
