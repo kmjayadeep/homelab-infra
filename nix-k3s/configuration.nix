@@ -7,6 +7,14 @@
     ./modules/k3s.nix
   ];
 
+  # cilium ipv6 stuff
+  boot.kernelModules = [
+    "ip6_tables"
+    "ip6table_mangle"
+    "ip6table_raw"
+    "ip6table_filter"
+  ];
+
   nix = {
     settings.auto-optimise-store = true;
     gc = {

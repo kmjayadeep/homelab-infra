@@ -18,7 +18,7 @@
       "--disable local-storage"
       "--disable-helm-controller"
       "--write-kubeconfig /home/operator/.kube/config"
-      "--flannel-backend=host-gw"
+      "--flannel-backend=none"
       "--write-kubeconfig-mode 644"
     ];
   };
