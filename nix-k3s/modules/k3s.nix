@@ -20,6 +20,7 @@
       "--write-kubeconfig /home/operator/.kube/config"
       "--flannel-backend=none"
       "--write-kubeconfig-mode 644"
+      "--kubelet-arg=allowed-unsafe-sysctls=net.ipv6.*,net.ipv4.*"
     ];
   };
 
