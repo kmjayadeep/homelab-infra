@@ -3,7 +3,9 @@
   services.k3s = {
     enable = true;
     role = "server";
+    package = pkgs.k3s_1_33;
     extraFlags = toString [
+      "--cluster-init"
       "--disable traefik"
       "--disable servicelb"
       "--disable metrics-server"
